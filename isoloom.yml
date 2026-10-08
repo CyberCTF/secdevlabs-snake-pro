@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# Snake Pro (secDevLabs, by Globo.com) as an Isoloom spec: a Go snake game with a Cryptographic
+# Failure (passwords sent over HTTP and stored in clear text), vendored unchanged in
+# build/api/app/ (the app folder owasp-top10-2021-apps/a2/snake-pro of secDevLabs), built by an
+# overlay of upstream's Dockerfile, and its MongoDB machine, published as upstream does.
+# `isoloom generate`, then `isoloom up docker`.
+version: 1
+name: secdevlabs-snake-pro
+
+networks:
+  lab: { cidr: 10.60.93.0/24, internet: false }
+
+machines:
+  mongodb:
+    networks: { lab: 20 }
+    services: [{ port: 27017, name: mongodb, publish: 27017 }]
+    resources: { cpus: 1, memory_mb: 512 }
+    volumes: { data: /data/db }
+    docker:
+      build: build/mongodb
+
+  api:
+    networks: { lab: 10 }
+    services: [{ port: 10003, name: web, http: true, publish: 10003 }]
+    resources: { cpus: 1, memory_mb: 512 }
+    depends_on: [mongodb]
+    docker:
+      build: build/api
+
+checks:
+  - name: the login page answers
+    http: http://api:10003/login
+    wait: 180
+  - name: a player registers and logs in over plain HTTP
+    script: checks/register.sh
+    wait: 60
+
+message: |
+  Snake Pro answers at http://localhost:{{ machines.api.services.0.publish }}/ and its MongoDB
+  at localhost:{{ machines.mongodb.services.0.publish }}. Register, play, and follow your
+  password from the browser to the database.
