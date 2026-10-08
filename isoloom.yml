@@ -3,7 +3,7 @@
 # Failure (passwords sent over HTTP and stored in clear text), vendored unchanged in
 # build/api/app/ (the app folder owasp-top10-2021-apps/a2/snake-pro of secDevLabs), built by an
 # overlay of upstream's Dockerfile, and its MongoDB machine, published as upstream does.
-# `isoloom generate`, then `isoloom up docker`.
+# `isoloom generate`, then `isoloom run docker`.
 version: 1
 name: secdevlabs-snake-pro
 
