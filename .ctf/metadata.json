@@ -4,11 +4,5 @@
   "question": "Recover a player's password in clear text.",
   "category": "WEB",
   "difficulty": 2,
-  "evidence_kind": "SECRET",
-  "capabilities": [
-    "cryptographic-failure",
-    "cleartext-storage",
-    "cleartext-transmission",
-    "mongodb"
-  ]
+  "evidence_kind": "SECRET"
 }
