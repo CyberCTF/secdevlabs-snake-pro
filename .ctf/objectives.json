@@ -1,0 +1,43 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Recover a player's clear-text password: the champion's password is the flag.",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-secdevlabs-snake-pro}",
+      "hints": [
+        "Credentials travel over plain HTTP and are stored as typed.",
+        "Read about cleartext storage and transmission of sensitive data."
+      ],
+      "steps": [
+        {
+          "key": "db",
+          "title": "Identify the database",
+          "prompt": "Which database stores the players?",
+          "check": {
+            "answer": [
+              "mongodb",
+              "mongo"
+            ]
+          }
+        },
+        {
+          "key": "class",
+          "title": "Name the weakness",
+          "prompt": "Which OWASP category fits this lab?",
+          "check": {
+            "answer": [
+              "cryptographic failures",
+              "sensitive data exposure",
+              "cleartext storage"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
