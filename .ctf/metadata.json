@@ -1,8 +1,11 @@
 {
+  "project_name": "cyberlabs-secdevlabs-snake-pro",
+  "slug": "secdevlabs-snake-pro",
   "title": "secDevLabs Snake Pro",
   "description": "A Go snake game with a ranking, backed by MongoDB. Players register and log in over plain HTTP, and the application keeps their passwords as they typed them.",
-  "question": "Recover a player's password in clear text; the top player's password is the flag.",
-  "category": "WEB",
+  "category": "web",
   "difficulty": 2,
-  "evidence_kind": "SECRET"
+  "evidence_kind": "SECRET",
+  "capabilities": [],
+  "question": "Recover a player's password in clear text; the top player's password is the flag."
 }
