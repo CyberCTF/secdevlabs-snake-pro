@@ -8,30 +8,40 @@ version: 1
 name: secdevlabs-snake-pro
 
 # Given by the CyberCTF launcher: this player's flag. Without it the development flag.
-inputs: [CTF_FLAG_MAIN]
+inputs:
+  CTF_FLAG_MAIN: {}
 
 networks:
-  lab: { cidr: 10.60.93.0/24, internet: false }
+  lab: {cidr: 10.60.93.0/24, internet: false}
 
 machines:
   mongodb:
-    networks: { lab: 20 }
-    services: [{ port: 27017, name: mongodb, publish: 27017 }]
-    resources: { cpus: 1, memory_mb: 512 }
-    volumes: { data: /data/db }
-    inputs: [CTF_FLAG_MAIN]
-    docker:
+    networks: {lab: 20}
+    resources: {cpus: 1, memory_mb: 512}
+    volumes: {data: /data/db}
+    ports:
+      mongodb:
+        port: 27017
+        publish: true
+    files:
+      - path: /run/lab/ctf_flag_main
+        input: CTF_FLAG_MAIN
+    setup:
+      - ctf/flag.sh
+    app:
       build: build/mongodb
-      init: [ctf/flag.sh]
 
   api:
-    networks: { lab: 10 }
-    services: [{ port: 10003, name: web, http: true, publish: 10003 }]
-    resources: { cpus: 1, memory_mb: 512 }
+    networks: {lab: 10}
+    resources: {cpus: 1, memory_mb: 512}
     depends_on: [mongodb]
-    docker:
+    ports:
+      web:
+        port: 10003
+        protocol: http
+        publish: true
+    app:
       build: build/api
-
 checks:
   - name: the login page answers
     http: http://api:10003/login
@@ -41,6 +51,6 @@ checks:
     wait: 60
 
 message: |
-  Snake Pro answers at http://localhost:{{ machines.api.services.0.publish }}/ and its MongoDB
-  at localhost:{{ machines.mongodb.services.0.publish }}. Register, play, and follow your
+  Snake Pro answers at {{ machines.api.ports.web.url }} and its MongoDB
+  at localhost:{{ machines.mongodb.ports.mongodb.published }}. Register, play, and follow your
   password from the browser to the database.
